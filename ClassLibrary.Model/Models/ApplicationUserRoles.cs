@@ -1,4 +1,4 @@
-﻿namespace User_Account_information.Models
+﻿namespace ClassLibrary.Model.Models
 {
     public static class ApplicationUserRoles
     {

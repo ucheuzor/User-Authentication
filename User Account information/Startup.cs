@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +63,15 @@ namespace User_Account_information
                     };
                 });
 
-
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "User Account API",
+                    Version = "v1",
+                    Description = "An API to Authenticate User Accounts"
+                });
+            });
         }
 
 
@@ -86,6 +95,9 @@ namespace User_Account_information
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "User Authy"));
         }
     }
 }

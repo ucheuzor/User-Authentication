@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ClassLibrary.Model.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,5 +15,7 @@ namespace User_Account_information.Data
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Profile> Profiles { get; set; }
     }
 }
