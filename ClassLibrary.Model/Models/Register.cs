@@ -4,16 +4,17 @@ namespace ClassLibrary.Model.Models
 {
     public class Register
     {
-        [Required(ErrorMessage = "User Name is required")]
         public string Username { get; set; }
-
-        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
-
-        [EmailAddress]
-        [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
-
         public string Role { get; set; }
+
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Landmark { get; set; }
+        public string Pin { get; set; }
+        public string CountryCode { get; set; }
     }
 }

@@ -17,5 +17,6 @@ namespace User_Account_information.Data
         }
 
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<Address> Addresses { get; set; }
     }
 }
