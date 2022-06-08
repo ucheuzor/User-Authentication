@@ -18,15 +18,22 @@ namespace User_Account_information.Controllers
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
-        public AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AccountController(
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration,
+            ApplicationDbContext context
+            )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _context = context;
         }
 
         [HttpPost]
@@ -81,7 +88,7 @@ namespace User_Account_information.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already Exists" });
             }
 
-            ApplicationUser user = new ApplicationUser
+            IdentityUser user = new IdentityUser
             {
                 Email = registerModel.Email,
                 UserName = registerModel.Username,
@@ -109,6 +116,21 @@ namespace User_Account_information.Controllers
 
             if (!string.IsNullOrEmpty(registerModel.Role) && registerModel.Role == ApplicationUserRoles.User)
                 await _userManager.AddToRoleAsync(user, ApplicationUserRoles.User);
+
+            var profile = new Profile
+            {
+                Address1 = registerModel.Address1,
+                Address2 = registerModel.Address2,
+                City = registerModel.City,
+                State = registerModel.State,
+                CountryCode = registerModel.CountryCode,
+                Landmark = registerModel.Landmark,
+                Pin = registerModel.Pin,
+                UserId = user.Id
+            };
+
+            await _context.Profiles.AddAsync(profile);
+            await _context.SaveChangesAsync();
 
             return Ok(new Response { Status = "Success", Message = "User account was successfully created!" });
         }

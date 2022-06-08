@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace User_Account_information.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -17,6 +17,5 @@ namespace User_Account_information.Data
         }
 
         public DbSet<Profile> Profiles { get; set; }
-        public DbSet<Address> Addresses { get; set; }
     }
 }
