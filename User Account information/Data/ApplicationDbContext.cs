@@ -1,4 +1,4 @@
-﻿using ClassLibrary.Model.Models;
+﻿using ClassLibrary.Model.Models.DbModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -17,5 +17,6 @@ namespace User_Account_information.Data
         }
 
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

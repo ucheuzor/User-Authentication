@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace ClassLibrary.Model.Models
+namespace ClassLibrary.Model.Models.DbModel
 {
     public class Profile
     {
