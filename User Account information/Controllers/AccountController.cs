@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -229,7 +230,33 @@ namespace User_Account_information.Controllers
             return Unauthorized();
         }
 
-        private object GetUserFromAccessToken(string token)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="refreshToken"></param>
+        /// <returns cref="true"></returns>
+        private bool ValidateRefreshToken(IdentityUser user, string refreshToken)
+        {
+            RefreshToken rtUser = _context.RefreshTokens.Where(x => x.Token == refreshToken)
+                .OrderByDescending(x => x.ExpirationDateUTC)
+                .FirstOrDefault();
+
+            if (rtUser != null && rtUser.UserId == user.UserName && rtUser.ExpirationDateUTC > DateTime.UtcNow)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private IdentityUser GetUserFromAccessToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -252,6 +279,19 @@ namespace User_Account_information.Controllers
             SecurityToken securityToken;
 
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+
+            JwtSecurityToken jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken != null && jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var username = principal.FindFirst(ClaimTypes.Name)?.Value;
+
+                var userInfo = _context.Users.FirstOrDefault(x => x.UserName == username);
+
+                return userInfo;
+            }
+
+            return null;
         }
     }
 }
