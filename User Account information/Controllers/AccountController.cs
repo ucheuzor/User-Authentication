@@ -72,10 +72,14 @@ namespace User_Account_information.Controllers
                         signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
-                ; return Ok(new
+                RefreshTokenViewModel refreshTokenModel = await GenerateAccessToken(user);
+
+                 return Ok(new
                 {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                     success = true,
+                    token = refreshTokenModel.Token,
+                    refreshToken = refreshTokenModel.RefreshToken,
+                    expiration = refreshTokenModel.Expiration
                 });
             }
 
@@ -144,7 +148,7 @@ namespace User_Account_information.Controllers
         /// Generate Access Token
         /// </summary>
         /// <returns></returns>
-        public async Task<RefreshTokenViewModel> GenerateAccessToken(IdentityUser user)
+        private async Task<RefreshTokenViewModel> GenerateAccessToken(IdentityUser user)
         {
             var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -186,7 +190,6 @@ namespace User_Account_information.Controllers
         /// <param name="userId"></param>
         /// <param name="tokenId"></param>
         /// <returns><see cref="Task{RefreshToken}"/></returns>
-
         private async Task<RefreshToken> GenerateRefreshToken(string userId, string tokenId)
         {
             var refreshToken = new RefreshToken();
